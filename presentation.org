@@ -1,0 +1,263 @@
+#+title: Org-mode und weiteres
+#+author: Kaan sein Name
+#+date: 11.09.2019
+
+* KeyCastr
+
+Kaan, denk dran, KeyCastr anzuschalten!
+
+Damit man auch sieht, was Du tippst :-)
+
+Und jetzt gehts loooos!
+
+* Overview
+
+1. org-mode allgemein, Überschriften, Listen, Links
+2. TODOs
+   - Timestamp wenn erledigt
+   - Schedule und Deadline
+3. org-agenda und org-capture
+4. org-estimate
+5. org-export
+6. Tabellen
+7. org-babel und Codeschnipsel-Ausführung
+8. Snippets (Protokoll-Template, ...)
+
+* org-Überschriften und Listen
+
+| Beschreibung            | Kombi            | Funktionsname                      |
+|-------------------------+------------------+------------------------------------|
+| Fettdruck / Kursiv      | *text* ,  /text/ |                                    |
+| unterstrichen           | _text_           |                                    |
+| Code / Verbatim         | =Int= , ~text~   |                                    |
+| Umbruch nach 80 Zeichen | M-q              | org-fill-paragraph                 |
+|                         |                  |                                    |
+| Neue Überschrift        | C-ENTER          | org-insert-heading-respect-content |
+| Überschrift einrücken   | M-Pfeil[l/r]     | org-shiftmetaleft / right          |
+| Inhalt ein/ausklappen   | TAB              | org-cycle                          |
+
+- Beispiel: Lagerhaltungssoftware User-Stories
+
+* Links
+
+- HTTP-URLs werden automatisch klickbar gemacht
+- Links mit Tastenkombination =C-c C-o= (org-open-at-point) öffnen
+- Links Namen vergeben:
+#+begin_src org-mode
+[[link-ziel][link-name]]
+#+end_src
+
+* Links
+
+- Auch Dateien verlinken ist möglich:
+[[file:~/org/todos.org]]
+file:~/active-group/fortbildungen/emacs-org-mode/emacs-logo.png
+- Bilder inline anzeigen via =C-c C-x C-v= (org-toggle-inline-images)
+- Links erstellen mit Befehl: =C-c C-l= (org-insert-link)
+- Einen Link zur aktuellen Datei + Zeile intern speichern mit =C-c l=
+
+* Todos
+
+| Beschreibung                | Kombi            | Funktionsname                           |
+|-----------------------------+------------------+-----------------------------------------|
+| Todo voranstellen /         | SHIFT-Pfeil[l/r] | org-shiftleft                           |
+| Done markieren              |                  |                                         |
+| Neues Todo                  | C-SHIFT-ENTER    | org-insert-todo-heading-respect-content |
+| Schedule setzen             | C-c C-s          | org-schedule                            |
+| Deadline setzen             | C-c C-d          | org-deadline                            |
+| In Timestamp Zahlen         | SHIFT-Pfeil[u/d] | org-shiftup                             |
+| ändern                      |                  |                                         |
+| Item-Liste, Item hinzufügen | M-SHIFT-ENTER    | org-insert-todo-heading                 |
+| Item-Liste, Überschrift     | [/] oder [%]     |                                         |
+| Item als "fertig" markieren | C-c C-c          | org-ctrl-c-ctrl-c                       |
+
+* org-agenda
+
+- Die Agenda zeigt eine Übersicht über anstehende TODO s (die nicht DONE sind)
+- Die Todos müssen aber ein SCHEDULE haben oder eine DEADLINE
+
+| Beschreibung  | Kombi | Funktionsname |
+|---------------+-------+---------------|
+| Agenda öffnen | C-c a | org-agenda    |
+
+- Im Agenda-Menü dann z.B. =a= wählen für Wochenübersicht
+- Unterschied Deadline und Schedule
+  - Deadline-Todos müssen bei Deadline-Datum fertig sein
+    (deshalb werden Deadline-Todos täglich angezeigt)
+  - Schedule-Todos beginnen ab Schedule-Datum
+
+* org-agenda
+
+- Benötigt
+  - Agenda-Dateien-Ordner, setzbar in config-Datei via
+#+begin_src elisp
+(setq org-agenda-files '("~/org"))
+#+end_src
+
+  - Entsprechend org-Dateien im Ordner
+
+* org-capture
+
+- Bequem von "überall" aus Todos/Notizen erstellen
+- Unnötiges Datei-Öffnen und -Schließen entfällt
+- Notiz kann mit Link zur aktuellen Datei (+ aktuelle Zeile) versehen werden
+- Templates erstellbar für verschiedene Anwendungsgebiete
+
+| Beschreibung            | Kombi | Funktionsname |
+|-------------------------+-------+---------------|
+| Neues Capture erstellen | C-c c | org-capture   |
+
+* org-capture
+
+- Beim Bearbeiten kann auch direkt ein SCHEDULE oder eine DEADLINE angelegt
+  werden (wie oben mit =C-c C-s= bzw. =C-c C-d=)
+- Template auswählen und dann entweder
+  - Capture direkt abspeichern (=C-c C-c=)
+  - Capture refilen (=C-c C-w=)
+  - Abbruch (=C-c C-k=)
+- Danach gelangt man direkt dorthin zurück, von wo aus man gestartet ist
+
+* org-capture
+
+- Benötigt
+  - Capture-Templates, z.B.
+#+begin_src elisp
+(setq org-capture-templates
+        `(("t" "Todo" entry (file+headline "todos.org" "Todo")
+           "* TODO %?\n %i %a" :prepend t)))
+#+end_src
+  - Eine Standard-Capture-Datei, z.B.
+#+begin_src elisp
+(setq org-default-notes-file "todos.org")
+#+end_src
+
+* org-capture - org-refile
+
+- Um nicht nur in Standard-Capture-Datei zu speichern, gibt es die
+  Refile-Funktion
+- Benötigt: Orte (Dateipfade), in welchen die Org-Dateien liegen, und Angabe,
+  wie tief in Überschriftenbaum nach Refile-Zielen gesucht werden soll:
+#+begin_src elisp
+(setq org-refile-targets '((org-agenda-files :maxlevel . 1)))
+#+end_src
+
+* org-estimate
+
+org-estimate ist ein Tool, um Aufwandsabschätzungen zu organisieren
+
+Benötigt:
+- Pro Bestellposition/Posten die Eigenschaft =Effort=
+#+begin_src org-mode
+    :PROPERTIES:
+    :Effort:   14
+    :END:
+#+end_src
+- Ein Column-View, in welcher die Aufwände tabellarisch berechnet (via =C-c C-c=
+  in der =BEGIN=-Zeile) und dargestellt werden
+- Eine =COLUMNS=-Option, z.B.
+#+begin_src org-mode
+  ~#+COLUMNS: %60ITEM(Position) %19Effort(geschätzer Aufwand){+;%s Tage}~
+#+end_src
+
+* org-export
+
+Mit Tastenkombination =C-e= öffnet sich Menü, aus welchem man verschiedene
+Export-Ziele wählen kann (z.B. LateX, PDF-Export, HTML)
+
+Beispiele:
+- Lastenheft
+- org-estimate
+- Diese Präsentation
+
+* Tabellen
+
+Tabellen im org-mode sind flexibel handhabbar:
+- (Neue) Zeilen/Spalten einfügen/löschen
+- Vertauschen von Zeilen/Spalten
+- Automatische Layout-Anpassung an Inhalt
+- Berechnungen über Zellen
+
+* Tabellen
+
+- Vertikaler Rand ist das Pipe-Symbol =|=.
+- Horizontaler Rand mit Bindestrich =-=.
+  - automatisch Trennzeile einfügen lassen mit
+    =|-= und dann ~TAB~
+- Mit ~TAB~ in nächste Zelle springen
+- Mit ~ENTER~ neue Zeile beginnen oder ebenfalls ~TAB~
+- Ebenfalls mit ~TAB~ Layout neu ausrichten lassen
+
+* Tabellen
+
+| Produkt  | Preis |
+|----------+-------|
+| Cola     |  1.50 |
+| Pizza    |     7 |
+| nochwas  |     3 |
+|----------+-------|
+| *GESAMT* |       |
+|----------+-------|
+
+In Zelle via =C-c += Spaltensumme. Mit =C-y= einfügen
+
+* Tabellen
+
+| Produkt  | Preis |
+|----------+-------|
+| Cola     |  1.50 |
+| Pizza    |     7 |
+| nochwas  |     3 |
+|----------+-------|
+| *GESAMT* |  11.5 |
+|----------+-------|
+#+TBLFM: @5$2=vsum(@2..@4)
+
+* Tabellenformeln
+
+- =#+TBLFM:= Neue Tabellenformel
+- =@5$2= Zeile 5, Spalte 2
+- =vsum= eingebaute Funktion, Spaltensumme
+
+- Auch Variablendeklaration möglich,
+  dazu erste Spalte freilassen als Markierungsspalte
+- Beispiel: eBike-Manager-Ticketverwaltung
+
+* org-babel - Code-Highlighting und Evaluation
+
+- org-babel hebt Code-Schnipsel hervor (Highlighting)
+- Kann den Quellcode sogar im org-Buffer ausführen
+- Code muss zwischen =#+begin_src= und =#+end_src= stehen
+- Programmiersprache angeben nach =#+begin_src=
+- =C-c C-c= lässt Code anschließend ausführen
+
+#+begin_src haskell
+foldl (+) 0 $ filter (> 2) [1, 5, 2, 4]
+#+end_src
+
+* Snippets - Protokoll-Template
+
+- Immer wiederkehrende Protokollmasken automatisieren
+- Via Elisp-Funktion und Keybinding
+- Nützliche Elisp-Funktionen
+  - =insert= Text einfügen
+  - =read-string= Liest in Mini-Buffer Texteingabe
+  - =switch-to-buffer= Öffnet neuen/vorhandenen Buffer
+* Snippets - Latexunterstützung (inline)
+
+- Latex-Unterstützung
+
+\begin{multiline}
+x & = \sqrt{b} \\
+y & = \frac{3}{4}
+\end{multiline}
+
+- Kann ein Preview erzeugen via =C-c C-x C-l= (org-toggle-latex-fragment)
+
+* Weiteres
+
+- org-reveal:
+  Schöne Präsentationen erstellen mit org-mode
+- org-capture Apple Mailprogramm
+https://github.com/tkf/org-mode/blob/master/lisp/org-mac-message.el
+- org-capture mit Alfred
+https://orgmode.org/worg/org-contrib/alfred-org-capture.html

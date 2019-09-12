@@ -1,0 +1,62 @@
+#+title: Spielwiese für Vortrag
+
+| Name     | Alter |
+|----------+-------|
+| Kaan     |    32 |
+| JOhannes |    33 |
+|          |    65 |
+|          |   130 |
+|          |       |
+
+
+
+
+* TODO Müll rausbringen
+  SCHEDULED: <2019-09-27 Fr ++1w>
+  :PROPERTIES:
+  :LAST_REPEAT: [2019-09-11 Mi 12:39]
+  :END:
+
+  - State "DONE"       from "TODO"       [2019-09-11 Mi 12:39]
+* TODO aufräumen
+
+* Einkaufsliste [3/3]
+- [X] Pizza
+- [X] Cola
+- [X]
+
+
+
+* Links
+** Dateien
+
+- Meine todo-Datei: [[file:~/org/todos.org][Klick]]
+
+** Bilder
+- Um das Bild inline anzeigen zu können, muss der Pfad in eckigen Klammern
+  stehen
+[[file:~/active-group/fortbildungen/emacs-org-mode/emacs-logo.png]]
+
+** Befehl
+- E-Mail-Adresse (mailto)
+[[mailto:kaaninho@gmail.com][Kaan seine E-Mail-Adresse]]
+
+* org-babel
+
+- Haskell-Beispiel
+#+begin_src haskell
+foldl (+) 0 $ filter (> 2) [1, 5, 2, 4]
+#+end_src
+
+#+RESULTS:
+: Prelude> 9
+
+
+- Easy Structure Template (=<s=)
+#+begin_src elisp
+(+ 3 2 2)
+
+#+end_src
+
+#+RESULTS:
+: 7

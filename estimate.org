@@ -1,0 +1,37 @@
+#+TITLE: Aufwandsanalyse "Mein Projekt"
+#+AUTHOR: Active Group GmbH
+#+COLUMNS: %60ITEM(Position) %19Effort(geschätzer Aufwand){+;%s Tage}
+#+OPTIONS: toc:nil
+
+
+
+
+#+BEGIN: columnview :hlines 1 :id global :indent t
+
+#+END:
+
+* Mein Projekt
+** Server
+    :PROPERTIES:
+    :Effort:   14
+    :END:
+
+- Über Konfiguration und Tags HTTP-Server abfragen und Ergebnis in Tags speichern.
+  Dokumentation FLHTTPC: [[../../documentation/FactoryLink/Testzentrum/flhttpc.hlp]]
+** Frontend
+
+*** Einstiegsseite
+   :PROPERTIES:
+   :Effort:   10
+   :END:
+
+- Suchfeld
+- Login
+
+*** Hardware verwalten
+   :PROPERTIES:
+   :Effort:   5
+   :END:
+
+- Hardwareauflistung
+- Bei Klick auf Hardware öffnet sich Detailansicht
